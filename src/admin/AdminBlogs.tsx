@@ -6,6 +6,7 @@ import { StorageService } from '../services/storage';
 import { BlogPost } from '../types';
 import { ImageUpload } from '../components/ImageUpload';
 import { ConfirmModal } from '../components/ConfirmModal';
+import { generateSlug } from '../lib/utils';
 
 export const AdminBlogs: React.FC = () => {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
@@ -27,10 +28,15 @@ export const AdminBlogs: React.FC = () => {
     e.preventDefault();
     if (!editingBlog) return;
 
+    const blogWithSlug = {
+      ...editingBlog,
+      slug: generateSlug(editingBlog.title)
+    };
+
     if (isAdding) {
-      await StorageService.saveBlog(editingBlog);
+      await StorageService.saveBlog(blogWithSlug);
     } else {
-      await StorageService.updateBlog(editingBlog);
+      await StorageService.updateBlog(blogWithSlug);
     }
 
     setBlogs(await StorageService.getBlogs());
@@ -54,6 +60,7 @@ export const AdminBlogs: React.FC = () => {
   const emptyBlog: BlogPost = {
     id: '',
     title: '',
+    slug: '',
     description: '',
     content: '',
     author: 'Admin',
