@@ -1,0 +1,263 @@
+{
+  "entities": {
+    "Program": {
+      "title": "Program",
+      "description": "A fitness program",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "price": { "type": "string" },
+        "discountPercentage": { "type": "number" },
+        "image": { "type": "string" },
+        "isEnabled": { "type": "boolean" }
+      },
+      "required": ["name", "description", "category", "image", "isEnabled"]
+    },
+    "Coach": {
+      "title": "Coach",
+      "description": "A fitness coach",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "experience": { "type": "string" },
+        "certifications": { "type": "string" },
+        "achievements": { "type": "string" },
+        "image": { "type": "string" },
+        "socials": {
+          "type": "object",
+          "properties": {
+            "instagram": { "type": "string" },
+            "youtube": { "type": "string" },
+            "linkedin": { "type": "string" }
+          }
+        }
+      },
+      "required": ["name", "role", "experience", "certifications", "achievements", "image", "socials"]
+    },
+    "BlogPost": {
+      "title": "BlogPost",
+      "description": "A blog post",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "content": { "type": "string" },
+        "author": { "type": "string" },
+        "date": { "type": "string" },
+        "image": { "type": "string" }
+      },
+      "required": ["title", "description", "content", "author", "date", "image"]
+    },
+    "Offer": {
+      "title": "Offer",
+      "description": "A promotional offer",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "image": { "type": "string" },
+        "discountText": { "type": "string" },
+        "isEnabled": { "type": "boolean" }
+      },
+      "required": ["title", "description", "image", "discountText", "isEnabled"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "A user testimonial",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "content": { "type": "string" },
+        "image": { "type": "string" }
+      },
+      "required": ["name", "role", "content", "image"]
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "A contact lead",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "interest": { "type": "string" },
+        "message": { "type": "string" },
+        "date": { "type": "string" }
+      },
+      "required": ["name", "email", "phone", "interest", "message", "date"]
+    },
+    "MembershipTier": {
+      "title": "MembershipTier",
+      "description": "A membership tier",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "features": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "highlight": { "type": "boolean" },
+        "pricing": {
+          "type": "object",
+          "properties": {
+            "monthly": { "type": "number" },
+            "quarterly": { "type": "number" },
+            "biannual": { "type": "number" },
+            "yearly": { "type": "number" }
+          },
+          "required": ["monthly"]
+        }
+      },
+      "required": ["name", "description", "features", "highlight", "pricing"]
+    },
+    "PlanInquiry": {
+      "title": "PlanInquiry",
+      "description": "An inquiry for a personalized plan",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "type": { "type": "string", "enum": ["Diet", "Workout"] },
+        "goals": { "type": "string" },
+        "date": { "type": "string" }
+      },
+      "required": ["name", "email", "phone", "type", "goals", "date"]
+    },
+    "FreeResource": {
+      "title": "FreeResource",
+      "description": "A free downloadable resource",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["Diet", "Workout"] },
+        "link": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["title", "type", "link"]
+    },
+    "LegalPage": {
+      "title": "LegalPage",
+      "description": "A legal page like privacy policy",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "content": { "type": "string" },
+        "isVisible": { "type": "boolean" },
+        "lastUpdated": { "type": "string" }
+      },
+      "required": ["title", "slug", "content", "isVisible", "lastUpdated"]
+    },
+    "CounselingService": {
+      "title": "CounselingService",
+      "description": "A counseling service",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "duration": { "type": "string" },
+        "image": { "type": "string" },
+        "isEnabled": { "type": "boolean" }
+      },
+      "required": ["title", "description", "price", "duration", "image", "isEnabled"]
+    },
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "Global site settings",
+      "type": "object",
+      "properties": {
+        "logoUrl": { "type": "string" },
+        "faviconUrl": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "whatsappNumber": { "type": "string" },
+        "counselingWhatsapp": { "type": "string" },
+        "address": { "type": "string" },
+        "mapEmbedUrl": { "type": "string" },
+        "offersEnabled": { "type": "boolean" },
+        "programCategories": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "contactInterests": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "socials": {
+          "type": "object",
+          "properties": {
+            "facebook": { "type": "string" },
+            "instagram": { "type": "string" },
+            "twitter": { "type": "string" }
+          }
+        },
+        "aboutUsTitle": { "type": "string" },
+        "aboutUsSubtitle": { "type": "string" },
+        "aboutUsImage": { "type": "string" },
+        "aboutUsText1": { "type": "string" },
+        "aboutUsText2": { "type": "string" },
+        "homeHeroTitle": { "type": "string" },
+        "homeHeroSubtitle": { "type": "string" },
+        "homeOpeningHours": { "type": "string" }
+      },
+      "required": ["contactEmail", "contactPhone", "whatsappNumber", "address", "mapEmbedUrl", "offersEnabled", "programCategories", "contactInterests", "socials"]
+    }
+  },
+  "firestore": {
+    "programs/{programId}": {
+      "schema": { "$ref": "#/entities/Program" },
+      "description": "Fitness programs"
+    },
+    "coaches/{coachId}": {
+      "schema": { "$ref": "#/entities/Coach" },
+      "description": "Fitness coaches"
+    },
+    "blogs/{blogId}": {
+      "schema": { "$ref": "#/entities/BlogPost" },
+      "description": "Blog posts"
+    },
+    "offers/{offerId}": {
+      "schema": { "$ref": "#/entities/Offer" },
+      "description": "Promotional offers"
+    },
+    "testimonials/{testimonialId}": {
+      "schema": { "$ref": "#/entities/Testimonial" },
+      "description": "User testimonials"
+    },
+    "leads/{leadId}": {
+      "schema": { "$ref": "#/entities/Lead" },
+      "description": "Contact leads"
+    },
+    "memberships/{membershipId}": {
+      "schema": { "$ref": "#/entities/MembershipTier" },
+      "description": "Membership tiers"
+    },
+    "plan_inquiries/{inquiryId}": {
+      "schema": { "$ref": "#/entities/PlanInquiry" },
+      "description": "Plan inquiries"
+    },
+    "free_resources/{resourceId}": {
+      "schema": { "$ref": "#/entities/FreeResource" },
+      "description": "Free resources"
+    },
+    "legal_pages/{pageId}": {
+      "schema": { "$ref": "#/entities/LegalPage" },
+      "description": "Legal pages"
+    },
+    "counseling/{counselingId}": {
+      "schema": { "$ref": "#/entities/CounselingService" },
+      "description": "Counseling services"
+    },
+    "settings/global": {
+      "schema": { "$ref": "#/entities/SiteSettings" },
+      "description": "Global settings"
+    }
+  }
+}

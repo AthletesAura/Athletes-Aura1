@@ -1,0 +1,238 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      // WARNING: Since we are using Anonymous Auth and local password verification,
+      // Firebase only knows that the user is authenticated anonymously.
+      return isAuthenticated();
+    }
+    
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+    
+    function isValidString(field, minLen, maxLen) {
+      return field is string && field.size() >= minLen && field.size() <= maxLen;
+    }
+    
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+    
+    function isValidProgram(data) {
+      return hasRequiredFields(['name', 'description', 'category', 'image', 'isEnabled']) &&
+             isValidString(data.name, 1, 100) &&
+             isValidString(data.description, 1, 5000) &&
+             isValidString(data.category, 1, 100) &&
+             isValidString(data.image, 1, 1000) &&
+             data.isEnabled is bool;
+    }
+    
+    function isValidCoach(data) {
+      return hasRequiredFields(['name', 'role', 'experience', 'certifications', 'achievements', 'image', 'socials']) &&
+             isValidString(data.name, 1, 100) &&
+             isValidString(data.role, 1, 100) &&
+             isValidString(data.experience, 1, 1000) &&
+             isValidString(data.certifications, 1, 1000) &&
+             isValidString(data.achievements, 1, 1000) &&
+             isValidString(data.image, 1, 1000) &&
+             data.socials is map;
+    }
+    
+    function isValidBlogPost(data) {
+      return hasRequiredFields(['title', 'description', 'content', 'author', 'date', 'image']) &&
+             isValidString(data.title, 1, 200) &&
+             isValidString(data.description, 1, 1000) &&
+             isValidString(data.content, 1, 50000) &&
+             isValidString(data.author, 1, 100) &&
+             isValidString(data.date, 1, 100) &&
+             isValidString(data.image, 1, 1000);
+    }
+    
+    function isValidOffer(data) {
+      return hasRequiredFields(['title', 'description', 'image', 'discountText', 'isEnabled']) &&
+             isValidString(data.title, 1, 200) &&
+             isValidString(data.description, 1, 1000) &&
+             isValidString(data.image, 1, 1000) &&
+             isValidString(data.discountText, 1, 100) &&
+             data.isEnabled is bool;
+    }
+    
+    function isValidTestimonial(data) {
+      return hasRequiredFields(['name', 'role', 'content', 'image']) &&
+             isValidString(data.name, 1, 100) &&
+             isValidString(data.role, 1, 100) &&
+             isValidString(data.content, 1, 2000) &&
+             isValidString(data.image, 1, 1000);
+    }
+    
+    function isValidLead(data) {
+      return hasRequiredFields(['name', 'email', 'phone', 'interest', 'message', 'date']) &&
+             isValidString(data.name, 1, 100) &&
+             isValidString(data.email, 1, 100) &&
+             (data.phone == "" || isValidString(data.phone, 1, 50)) &&
+             isValidString(data.interest, 1, 100) &&
+             isValidString(data.message, 1, 5000) &&
+             isValidString(data.date, 1, 100);
+    }
+    
+    function isValidMembershipTier(data) {
+      return hasRequiredFields(['name', 'description', 'features', 'highlight', 'pricing']) &&
+             isValidString(data.name, 1, 100) &&
+             isValidString(data.description, 1, 1000) &&
+             data.features is list &&
+             data.highlight is bool &&
+             data.pricing is map &&
+             data.pricing.keys().hasAll(['monthly']) &&
+             data.pricing.monthly is number;
+    }
+    
+    function isValidPlanInquiry(data) {
+      return hasRequiredFields(['name', 'email', 'phone', 'type', 'goals', 'date']) &&
+             isValidString(data.name, 1, 100) &&
+             isValidString(data.email, 1, 100) &&
+             isValidString(data.phone, 1, 50) &&
+             (data.type == 'Diet' || data.type == 'Workout') &&
+             isValidString(data.goals, 1, 5000) &&
+             isValidString(data.date, 1, 100);
+    }
+    
+    function isValidFreeResource(data) {
+      return hasRequiredFields(['title', 'type', 'link']) &&
+             isValidString(data.title, 1, 200) &&
+             (data.type == 'Diet' || data.type == 'Workout') &&
+             isValidString(data.link, 1, 1000);
+    }
+    
+    function isValidLegalPage(data) {
+      return hasRequiredFields(['title', 'slug', 'content', 'isVisible', 'lastUpdated']) &&
+             isValidString(data.title, 1, 200) &&
+             isValidString(data.slug, 1, 100) &&
+             isValidString(data.content, 1, 50000) &&
+             data.isVisible is bool &&
+             isValidString(data.lastUpdated, 1, 100);
+    }
+    
+    function isValidCounselingService(data) {
+      return hasRequiredFields(['title', 'description', 'price', 'duration', 'image', 'isEnabled']) &&
+             isValidString(data.title, 1, 200) &&
+             isValidString(data.description, 1, 2000) &&
+             data.price is number &&
+             isValidString(data.duration, 1, 100) &&
+             isValidString(data.image, 1, 1000) &&
+             data.isEnabled is bool;
+    }
+    
+    function isValidSiteSettings(data) {
+      return hasRequiredFields(['contactEmail', 'contactPhone', 'whatsappNumber', 'address', 'mapEmbedUrl', 'offersEnabled', 'programCategories', 'contactInterests', 'socials']) &&
+             isValidString(data.contactEmail, 1, 100) &&
+             isValidString(data.contactPhone, 1, 50) &&
+             isValidString(data.whatsappNumber, 1, 50) &&
+             isValidString(data.address, 1, 500) &&
+             isValidString(data.mapEmbedUrl, 1, 1000) &&
+             data.offersEnabled is bool &&
+             data.programCategories is list &&
+             data.contactInterests is list &&
+             data.socials is map;
+    }
+    
+    // ===============================================================
+    // Rules
+    // ===============================================================
+    
+    match /programs/{programId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidProgram(request.resource.data);
+      allow update: if isAdmin() && isValidProgram(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    match /coaches/{coachId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidCoach(request.resource.data);
+      allow update: if isAdmin() && isValidCoach(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    match /blogs/{blogId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidBlogPost(request.resource.data);
+      allow update: if isAdmin() && isValidBlogPost(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    match /offers/{offerId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidOffer(request.resource.data);
+      allow update: if isAdmin() && isValidOffer(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidTestimonial(request.resource.data);
+      allow update: if isAdmin() && isValidTestimonial(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    match /memberships/{membershipId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidMembershipTier(request.resource.data);
+      allow update: if isAdmin() && isValidMembershipTier(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    match /free_resources/{resourceId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidFreeResource(request.resource.data);
+      allow update: if isAdmin() && isValidFreeResource(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    match /legal_pages/{pageId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidLegalPage(request.resource.data);
+      allow update: if isAdmin() && isValidLegalPage(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    match /counseling/{counselingId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidCounselingService(request.resource.data);
+      allow update: if isAdmin() && isValidCounselingService(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    match /settings/{settingId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidSiteSettings(request.resource.data);
+      allow update: if isAdmin() && isValidSiteSettings(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    // Publicly writable collections (with validation)
+    match /leads/{leadId} {
+      allow read: if isAdmin();
+      allow create: if isValidLead(request.resource.data);
+      allow update: if isAdmin() && isValidLead(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    match /plan_inquiries/{inquiryId} {
+      allow read: if isAdmin();
+      allow create: if isValidPlanInquiry(request.resource.data);
+      allow update: if isAdmin() && isValidPlanInquiry(request.resource.data);
+      allow delete: if isAdmin();
+    }
+  }
+}
