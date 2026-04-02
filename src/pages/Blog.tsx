@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Calendar, User, ArrowRight } from 'lucide-react';
 import { StorageService } from '../services/storage.ts';
 import { BlogPost } from '../types.ts';
+import { generateSlug } from '../lib/utils';
 
 export const Blog: React.FC = () => {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
@@ -47,7 +48,7 @@ export const Blog: React.FC = () => {
               transition={{ delay: index * 0.1 }}
               className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all"
             >
-              <Link to={`/blog/${post.id}`} className="block relative h-64 overflow-hidden">
+              <Link to={`/blog/${post.slug || generateSlug(post.title)}`} className="block relative h-64 overflow-hidden">
                 <img 
                   src={post.image} 
                   alt={post.title}
@@ -68,7 +69,7 @@ export const Blog: React.FC = () => {
                 </div>
 
                 <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-black transition-colors">
-                  <Link to={`/blog/${post.id}`}>{post.title}</Link>
+                  <Link to={`/blog/${post.slug || generateSlug(post.title)}`}>{post.title}</Link>
                 </h2>
 
                 <p className="text-gray-600 mb-6 line-clamp-2">
@@ -76,7 +77,7 @@ export const Blog: React.FC = () => {
                 </p>
 
                 <Link 
-                  to={`/blog/${post.id}`}
+                  to={`/blog/${post.slug || generateSlug(post.title)}`}
                   className="inline-flex items-center gap-2 text-black font-bold hover:gap-3 transition-all"
                 >
                   Read More <ArrowRight size={18} />
