@@ -5,18 +5,20 @@ import { motion } from 'motion/react';
 import { Calendar, User, ArrowLeft, Share2, Facebook, Twitter, Instagram } from 'lucide-react';
 import { StorageService } from '../services/storage.ts';
 import { BlogPost } from '../types.ts';
+import { generateSlug } from '../lib/utils';
 
 export const BlogPostViewer: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadPost = async () => {
-      if (id) {
+      if (slug) {
         const blogs = await StorageService.getBlogs();
-        const blog = blogs.find(b => b.id === id);
+        // Try to find by saved slug, generated slug, or ID
+        const blog = blogs.find(b => b.slug === slug || generateSlug(b.title) === slug || b.id === slug);
         if (blog) {
           setPost(blog);
         } else {
@@ -27,7 +29,7 @@ export const BlogPostViewer: React.FC = () => {
     };
     loadPost();
     window.scrollTo(0, 0);
-  }, [id, navigate]);
+  }, [slug, navigate]);
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center bg-white text-gray-900">Loading...</div>;
